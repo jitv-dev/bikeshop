@@ -1,0 +1,24 @@
+<div class="container my-5">
+    {{#if error}}
+    <div class="alert alert-danger text-center mb-5">{{error}}</div>
+    {{/if}}
+    <h2 class="mb-5 text-center">Crear cuenta</h2>
+    <form action="/auth/register" method="post">
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" name="nombre" id="nombre" value="{{nombre}}" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" id="email" value="{{email}}" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" name="password" id="password" value="{{password}}" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Registrar</button>
+    </form>
+    <div class="my-5 text-center">
+        Ya tienes cuenta? <a href="/auth/login">Inicia Sesión</a>
+    </div>
+</div>

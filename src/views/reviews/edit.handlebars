@@ -1,0 +1,30 @@
+<div class="container my-5">
+    <div class="card border-0 shadow-sm mb-5">
+        <div class="card-header bg-black text-white py-3">
+            <h4 class="mb-0 fw-bold text-center">Editar Review</h4>
+        </div>
+        <div class="card-body p-4">
+            <form action="/reviews/{{review.id}}?_method=PUT" method="post">
+                <div class="row g-3">
+                    <input type="hidden" name="bicicletaId" value="{{review.bicicletaId}}">
+                    <div class="col-md-6">
+                        <label for="comentario" class="form-label fw-semibold">Comentario</label>
+                        <textarea name="comentario" class="form-control form-control-lg" id="comentario"
+                            placeholder="Ingrese su comentario" required>{{review.comentario}}</textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="modelo" class="form-label fw-semibold">Calificacion</label>
+                        <input type="number" name="calificacion" class="form-control form-control-lg" id="calificacion"
+                            placeholder="Ingrese la calificacion (1 a 5)" min="1" max="5" required value="{{review.calificacion}}">
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-primary btn-lg px-4 fw-semibold">
+                        Enviar review
+                    </button>
+                    <a href="/bicicletas/{{review.bicicletaId}}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

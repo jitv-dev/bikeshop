@@ -1,0 +1,150 @@
+const { Bicicleta, Review } = require('../models/associations')
+const { requireAuth, requireRole } = require('../middlewares/auth')
+
+exports.index = async (req, res, next) => {
+    try {
+        const bicicletas = await Bicicleta.findAll({
+            order: [['id', 'ASC']],
+            raw: true
+        })
+        const { success } = req.query
+        const { error } = req.query
+        res.render('bicicletas/index', { bicicletas, success, error })
+    } catch (error) {
+        next(error)
+    }
+}
+
+exports.show = [
+    requireAuth, 
+    async (req, res, next) => {
+    try {
+        const { id } = req.params
+        const { success } = req.query
+        const bicicleta = await Bicicleta.findByPk(id, {
+            include: [{
+                model: Review, 
+                order: [['updatedAt', 'DESC']]
+            }]
+        })
+        if(!bicicleta) return res.status(404).send(`Bicicleta con el id: ${id} no encontrada`)
+
+        const biciDatoPlano = {
+            ...bicicleta.get({ plain: true }),
+            reviews: bicicleta.reviews.map(r => r.get({ plain: true }))
+        }
+        res.render('bicicletas/show', { bicicleta: biciDatoPlano, success })
+    } catch (error) {
+        next(error)
+    }
+}]
+
+exports.new = [
+    requireRole('admin'),
+    async (req, res, next) => {
+    res.render('bicicletas/new')
+}]
+
+exports.create = async (req, res, next) => {
+    try {
+        const { marca, modelo, tipo, precio, disponible, year } = req.body
+
+        if (!marca || !modelo || !tipo || !precio || !disponible || !year) {
+            res.status(400).send("Faltan datos obligatorios")
+        }
+
+        const nuevaBici = await Bicicleta.create({
+            marca,
+            modelo,
+            tipo,
+            precio: parseFloat(precio),
+            disponible: disponible === 'true', // Convertir string a boolean
+            year: parseInt(year)
+        })
+
+        console.log("Bicicleta creada exitosamente")
+
+        const msg = encodeURIComponent('Bicicleta creada exitosamente', nuevaBici)
+
+        res.redirect(`/bicicletas?success=${msg}`)
+    } catch (error) {
+        next(error)
+    }
+}
+
+exports.edit = async (req, res, next) => {
+    try {
+        const bicicleta = await Bicicleta.findByPk(req.params.id)
+
+        if (!bicicleta) return res.status(404).send('Bicicleta no encontrada')
+
+        const biciDatoPlano = {
+            ...bicicleta.get({ plain: true }),
+        }
+
+        const tipos = ['mtb', 'ruta', 'enduro', 'trail', 'bmx'].map(tipo => ({
+            value: tipo,
+            selected: tipo === biciDatoPlano.tipo
+        }))
+
+        res.render('bicicletas/edit', { bicicleta: biciDatoPlano, tipos })
+    } catch (error) {
+        next(error)
+    }
+}
+
+exports.update = async (req, res, next) => {
+    try {
+        const { id } = req.params
+        const { marca, modelo, tipo, precio, disponible, year } = req.body
+
+        // Version profe
+        const bici = await Bicicleta.findByPk(id)
+        if (!bici) return res.status(404).send('Bicicleta no encontrada')
+
+        const biciActualizada = await bici.update({
+            marca,
+            modelo,
+            tipo,
+            precio: parseFloat(precio),
+            disponible: disponible === 'true',
+            year: parseInt(year)
+        })
+
+        // Mi version
+        // const biciActualizada= await Bicicleta.update({
+        //     marca,
+        //     modelo,
+        //     tipo,
+        //     precio: parseFloat(precio),
+        //     disponible: disponible === 'true',
+        //     year: parseInt(year)
+        // }, {where: { id }})
+
+        console.log("Bicicleta actualizada exitosamente", biciActualizada)
+
+        const msg = encodeURIComponent('Bicicleta actualizada exitosamente')
+
+        res.redirect(`/bicicletas/${id}?success=${msg}`)
+    } catch (error) {
+        next(error)
+    }
+}
+
+exports.delete = async (req, res, next) => {
+    try {
+        const { id } = req.params
+        const bici = await Bicicleta.findByPk(id)
+        if (!bici) return res.status(404).send('Bicicleta no encontrada')
+
+        const biciEliminada = await bici.destroy()
+
+        console.log("Bicicleta eliminada exitosamente")
+
+        const msg = encodeURIComponent('Bicicleta eliminada exitosamente')
+
+        res.redirect(`/bicicletas?success=${msg}`)
+    } catch (error) {
+        next(error)
+    }
+}

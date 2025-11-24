@@ -1,0 +1,28 @@
+<div class="container my-5">
+    <div class="mb-5">
+        {{#if error}}
+        <div class="alert alert-danger text-center">{{error}}</div>
+        {{/if}}
+        {{#if success}}
+        <div class="alert alert-success text-center">{{success}}</div>
+        {{/if}}
+        {{#if logout}}
+        <div class="alert alert-danger text-center">{{logout}}</div>
+        {{/if}}
+    </div>
+    <h2 class="mb-5 text-center">Iniciar Sesión</h2>
+    <form action="/auth/login" method="post">
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" id="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" name="password" id="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Log in</button>
+    </form>
+    <div class="my-5 text-center">
+        No tienes cuenta? <a href="/auth/register">Registrate</a>
+    </div>
+</div>

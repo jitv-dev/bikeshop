@@ -1,0 +1,59 @@
+<div class="container my-5">
+    <div class="card border-0 shadow-sm mb-5">
+        <div class="card-header bg-warning text-white py-3">
+            <h4 class="mb-0 fw-bold text-center">Editar bicicleta ID: {{bicicleta.id}}</h4>
+        </div>
+        <div class="card-body p-4">
+            <form action="/bicicletas/{{bicicleta.id}}?_method=PUT" method="POST">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="marca" class="form-label fw-semibold">Marca</label>
+                        <input type="text" name="marca" class="form-control form-control-lg" id="marca"
+                            value="{{bicicleta.marca}}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="modelo" class="form-label fw-semibold">Modelo</label>
+                        <input type="text" name="modelo" class="form-control form-control-lg" id="modelo"
+                            value="{{bicicleta.modelo}}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="tipo" class="form-label fw-semibold">Tipo</label>
+                        <select class="form-select form-select-lg" name="tipo" id="tipo" required>
+                            {{#each tipos}}
+                                <option value="{{value}}" {{#if selected}} selected {{/if}}>{{value}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="precio" class="form-label fw-semibold">Precio</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">$</span>
+                            <input type="number" name="precio" class="form-control form-control-lg" id="precio"
+                                value="{{bicicleta.precio}}" step="0.01" min="1" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="disponible" class="form-label fw-semibold">Disponibilidad</label>
+                        <select class="form-select form-select-lg" id="disponible" name="disponible" required>
+                            <option value="true" {{#if bicicleta.disponible}}selected{{/if}}>Disponible</option>
+                            <option value="false" {{#unless bicicleta.disponible}}selected{{/unless}}>No Disponible</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="year" class="form-label fw-semibold">Año</label>
+                        <div class="input-group">
+                            <input type="number" name="year" class="form-control form-control-lg" id="year"
+                                value="{{bicicleta.year}}" step="1" min="1900" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-warning btn-lg px-4 fw-semibold">
+                        Actualizar
+                    </button>
+                    <a href="/bicicletas" class="btn btn-dark btn-lg px-4 fw-semibold">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
