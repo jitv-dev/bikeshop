@@ -4,7 +4,7 @@ const path = require('path');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 // const { expressjwt } = require('express-jwt')
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 8080
 const sequelize = require('./src/config/db')
 
 const bicicletasRouter = require('./src/routes/bicicletas')
@@ -49,7 +49,8 @@ app.use((err, req, res, next) => {
 })
 
 // force para crear las tablas, luego usar alter
-sequelize.sync({ alter: true })
+// en produccion nunca deberia existir el alter o force
+sequelize.sync({ alter: process.env.NODE_ENV !== "production" })
     .then(() => {
         console.log('Base de datos ha sido sincronizada')
         app.listen(PORT, () => {
